@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="frame.css"/>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="tweetlol.js"></script>
+    <script type="text/javascript">
+        //<![CDATA[
+
+        //]]>
+    </script>
+</head>
+<body>
+    <div class="dialog" id="login">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Username:</td><td><input type="text" name="username"/></td>
+                </tr>
+                <tr>
+                    <td>Password:</td><td><input type="password" name="password"/></td>
+                </tr>
+                <tr>
+                    <td class="error"/><td><input type="submit" name="save" value="Login"/></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ul class="tabbar">
+        <li id="friends" class="active">Friends</li>
+        <li id="prefs">Prefs</li>
+    </ul>
+
+    <div class="view" id="friendsView">
+        <ul class="entries" id="friendEntries"/>
+    </div>
+
+    <div class="view" id="prefsView">
+        <p>
+            Log out: <button onclick="clearLogin();$('div#login').slideDown('normal');">Log out</button>
+        </p>
+    </div>
+
+    <div class="toolbar">
+        <input type="text" class="tweet" maxlength="140"/>&nbsp;<span class="tweet">140</span>
+    </div>
+</body>
+</html>

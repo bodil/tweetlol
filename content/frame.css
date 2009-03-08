@@ -1,0 +1,181 @@
+@CHARSET "UTF-8";
+
+body {
+    margin: 0;
+    background-color: black;
+    color: white;
+    font-size: 9pt;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    color: #88f;
+}
+
+a:hover {
+    background-color: #113;
+}
+
+div.view {
+    overflow-y: scroll;
+}
+
+div.toolbar {
+    background-color: #222;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+div.toolbar input.tweet {
+    width: 80%;
+}
+
+div.toolbar span.tweet {
+    font-size: 0.9em;
+}
+
+div.dialog {
+    margin: 2px;
+    border: 2px solid black;
+    padding: 0.5em;
+    background-color: #444;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+div.dialog input {
+    width: 90%;
+}
+
+div.dialog .error {
+    font-size: 0.8em;
+}
+
+ul.tabbar {
+    margin: 0;
+    padding: 0.4em 0 0.2em 0;
+    border-bottom: 1px solid #777;
+}
+
+ul.tabbar li {
+    display: inline;
+    margin: 0 0 0 0.4em;
+    padding: 0.2em 0.4em;
+    background-color: #444;
+    cursor: pointer;
+}
+
+ul.tabbar li:hover, ul.tabbar li.active {
+    background-color: #777;
+}
+
+ul.entries {
+    margin: 0;
+    padding: 0;
+}
+
+ul.entries li.entry {
+    margin: 0;
+    padding: 0 0.3em 0 0;
+    list-style: none;
+}
+
+p.postinfo {
+    margin: 0;
+    padding: 0.3em 1em;
+    background-color: #448;
+    color: black;
+}
+
+p.postinfo2 {
+    margin: 0;
+    padding: 0.3em;
+    font-size: 0.9em;
+    background-color: #448;
+    color: black;
+}
+
+div.activeNav p.postinfo, div.activeNav p.postinfo2 {
+    background-color: #66c;
+    color: white;
+}
+
+div.activeNav p.postinfo a, div.activeNav p.postinfo2 a {
+    color: #ccf;
+}
+
+.postmore {
+    cursor: pointer;
+    color: #88f;
+    text-decoration: underline;
+}
+
+p.postmore {
+    padding: 0.5em;
+    margin: 0.5em 0 0 0;
+    font-size: 0.9em;
+    border-top: 1px solid #448;
+    border-bottom: 1px solid #448;
+}
+
+.postmore:hover {
+    background-color: #113;
+}
+
+p.post {
+    margin: 0.3em 0;
+    padding: 0.3em 1em;
+}
+
+p.media {
+    clear: both;
+    text-align: center;
+    margin: 0.3em 0 0 0;
+}
+
+p.mediaCaption {
+    text-align: center;
+    margin: 0 0 0.3em 0;
+}
+p.like {
+    font-size: 0.9em;
+    margin: 0.5em;
+}
+
+p.like a {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+ul.entries li.entry img.portrait {
+    float: right;
+    margin: 0.3em 0.3em 0.5em 0.5em;
+}
+
+ul.comments li.comment {
+    font-size: 0.9em;
+    list-style-position: outside;
+    list-style-image: url(http://friendfeed.com/static/images/quote.png);
+}
+
+ul.comments li.comment p {
+    margin: 0.5em 0;
+}
+
+ul.actions {
+    margin: 0.6em 0;
+    padding: 0 0.6em;
+    text-align: center;
+}
+
+ul.actions li {
+    list-style: none;
+    display: inline;
+    padding: 0.1em 0.6em;
+    border: 1px outset #888;
+    background-color: #666;
+    cursor: pointer;
+}

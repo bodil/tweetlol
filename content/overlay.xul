@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
+<overlay id="tweetlolSidebarOverlay"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <menupopup id="viewSidebarMenu">
+        <menuitem key="key_openTweetlolSidebar" observes="viewTweetlolSidebar"  />
+    </menupopup>
+
+    <keyset id="mainKeyset">
+        <key id="key_openTweetlolSidebar" command="viewTweetlolSidebar"
+            key="&openTweetlolSidebar.commandkey;" 
+            modifiers="&openTweetlolSidebar.modifierskey;" />
+    </keyset>
+
+    <broadcasterset id="mainBroadcasterSet"> 
+        <broadcaster id="viewTweetlolSidebar" 
+            label="&tweetlol.title;"
+            autoCheck="false"
+            type="checkbox"
+            group="sidebar"
+            sidebarurl="chrome://tweetlol/content/tweetlol.xul"
+            sidebarTitle="&tweetlol.title;"
+            oncommand="toggleSidebar('viewTweetlolSidebar');" />
+    </broadcasterset>
+
+</overlay>
