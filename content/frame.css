@@ -58,6 +58,7 @@ ul.tabbar {
     margin: 0;
     padding: 0.4em 0 0.2em 0;
     border-bottom: 1px solid #777;
+    cursor: default;
 }
 
 ul.tabbar li {
@@ -81,6 +82,7 @@ ul.entries li.entry {
     margin: 0;
     padding: 0 0.3em 0 0;
     list-style: none;
+    clear: both;
 }
 
 p.postinfo {
@@ -140,6 +142,7 @@ p.mediaCaption {
     text-align: center;
     margin: 0 0 0.3em 0;
 }
+
 p.like {
     font-size: 0.9em;
     margin: 0.5em;
@@ -147,6 +150,15 @@ p.like {
 
 p.like a {
     text-decoration: underline;
+    cursor: pointer;
+}
+
+ul.entries li.entry p.toolbar {
+    margin: 0 0.5em;
+    float: left;
+}
+
+ul.entries li.entry p.toolbar img {
     cursor: pointer;
 }
 
