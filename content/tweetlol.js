@@ -302,7 +302,6 @@ function actionFavourite(tweet, item, fave, event) {
 }
 
 function populateTweets(tweets) {
-    log("received " + tweets.length+ " tweets at " + new Date().toTimeString());
     $.each(tweets.reverse(), function() {
         $("#friendEntries").prepend(tweetToDOM(this));
         if (this.id > lastTweet) lastTweet = this.id;
