@@ -14,40 +14,16 @@
 		</and>
 	</condition>
 	
-	<target name="chrome">
+	<target name="dist">
 		<mkdir dir="${dist.dir}" />
-		<zip destfile="${dist.dir}/${app.name}.jar">
+		<zip destfile="${dist.dir}/${app.name}.xpi">
 			<fileset dir="${src.dir}">
 				<include name="content/**" />
 				<include name="locale/**" />
 				<include name="skin/**" />
-				<exclude name="**/.*" />
-				<exclude name="**/CVS/**" />
-			</fileset>
-		</zip>
-	</target>
-
-	<target name="test.chrome" depends="chrome" if="ff.present">
-		<!-- copy to chrome directory -->
-		<copy file="${dist.dir}/${app.name}.jar" todir="${ff.dir}/chrome/chrome" overwrite="true" />
-		<copy file="${src.dir}/chrome.manifest" tofile="${ff.dir}/chrome/${app.name}.manifest" overwrite="true" />
-	</target>
-	
-	<!-- copy to extensions directory -->
-	<!--
-	<target name="test.ext" depends="chrome" if="ff.present">
-		<copy file="${dist.dir}/${app.name}.jar" todir="${ff.dir}/extensions/${app.id}/chrome" overwrite="true" />
-		<copy file="${src.dir}/chrome.manifest" todir="${ff.dir}/extensions/${app.id}" overwrite="true" />
-	</target>
-	-->
-	
-	<target name="dist" depends="chrome">
-		<zip destfile="${dist.dir}/${app.name}.xpi">
-			<zipfileset file="${dist.dir}/${app.name}.jar" prefix="chrome"/>
-			<fileset dir="${src.dir}">
-				<include name="chrome.manifest" />
-				<include name="install.rdf" />
-				<include name="defaults/**" />
+                <include name="chrome.manifest" />
+                <include name="install.rdf" />
+                <include name="defaults/**" />
 				<exclude name="**/.*" />
 				<exclude name="**/CVS/**" />
 			</fileset>

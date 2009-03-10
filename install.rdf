@@ -7,7 +7,7 @@
 		<em:name>tweetlol</em:name>
 		<em:version>0.1</em:version>
 		<em:description>lol for your tweets!</em:description>
-		<em:creator>bodil@bodil.tv</em:creator>
+		<em:creator>Bodil Stokke</em:creator>
 		<em:id>tweetlol@bodil.tv</em:id>
         <em:type>2</em:type>
 		
@@ -20,7 +20,7 @@
 			</Description>
 		</em:targetApplication>
 		
-		<em:iconURL></em:iconURL>
+		<em:iconURL>chrome://tweetlol/content/icons/tweetlol.png</em:iconURL>
 		<em:homepageURL></em:homepageURL>
 	</Description>
 </RDF>
