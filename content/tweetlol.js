@@ -4,14 +4,13 @@ var tweetTimer = null;
 var replyingTo = null;
 
 var nativeJSON = Components.classes["@mozilla.org/dom/json;1"].createInstance(Components.interfaces.nsIJSON);
-/*
-var windowMediator = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                   .getService(Components.interfaces.nsIWindowMediator);
-var mainWindow = windowMediator.getMostRecentWindow("navigator:browser");
-*/
+
+var urlRe = /https?:\/\/[^ ):]+/;
+var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+)/;
 
 $(document).ready(function() {
     $("#tweetbox").keyup(tweetInput);
+    $("#tweetbox").keydown(tweetInputVerify);
     $("#login input[name='save']").click(loginSave);
     $("ul.tabbar li").click(function(event) {
         $("ul.tabbar li").each(function() {
@@ -107,10 +106,21 @@ function tweetInput(event) {
     updateInputCount();
 }
 
+function tweetInputVerify(event) {
+    if (event.keyCode > 31 && getInputCount() >= 140) {
+        event.preventDefault();
+    }
+}
+
 function updateInputCount() {
-    var len = $("#tweetbox").val().length;
-    $("div.toolbar span.tweet").text(140 - len);
+    $("div.toolbar span.tweet").text(140 - getInputCount());
     if (replyingTo && len == 0) replyingTo = null;
+}
+
+function getInputCount() {
+    var tweet = $("#tweetbox").val();
+    tweet = gsub(tweet, urlRe, function(match) { return shortenUrl(match[0]) });
+    return tweet.length;
 }
 
 function updateLayout() {
@@ -178,8 +188,24 @@ function gsub(source, pattern, replacement) {
     return result;
 }
 
+function asyncGsub(callback, source, pattern, replacement) {
+    function recurse(front, back) {
+        var match = back.match(pattern);
+        if (match) {
+            var newFront = front + back.slice(0, match.index);
+            var newBack = back.slice(match.index + match[0].length);
+            replacement(match, function(repl) {
+                recurse(newFront + repl, newBack);
+            });
+        } else {
+            callback(front + back);
+        }
+    }
+    recurse("", source);
+}
+
 function urlise(text) {
-    return gsub(text, /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+)/, function(url) {
+    return gsub(text, urliseRe, function(url) {
         url = url[1];
         if (url[0] == "@")
             return '@<a href="http://twitter.com/' + url.substring(1) + '">' + url.substring(1) + '</a>';
@@ -301,6 +327,24 @@ function actionFavourite(tweet, item, fave, event) {
     }
 }
 
+function shortenUrl(url, callback) {
+    if (!callback) {
+        if (url.length < 18) return url;
+        return "http://is.gd/xxxxx";
+    }
+    if (url.length < 18) {
+        callback(url);
+    } else {
+        $.ajax({
+            url: "http://is.gd/api.php",
+            data: { longurl: url },
+            dataType: "text",
+            error: function() { callback(url); },
+            success: function(data) { callback(data); }
+        });
+    }
+}
+
 function populateTweets(tweets) {
     $.each(tweets.reverse(), function() {
         $("#friendEntries").prepend(tweetToDOM(this));
@@ -315,13 +359,10 @@ function populateTweets(tweets) {
 function refreshTweets() {
     data = { count: tweetsPerPage };
     if (lastTweet > 0) data.since_id = lastTweet;
-    //var auth = getLogin();
     $.ajax({
         url: "http://twitter.com/statuses/friends_timeline.json",
         data: data,
         dataType: "text",
-        //username: auth.username,
-        //password: auth.password,
         error: function(request, error) {
             log(error);
         },
@@ -333,31 +374,30 @@ function refreshTweets() {
     tweetTimer = setTimeout(refreshTweets, 120000);
 }
 
-function postUpdate(text, reply) {
-    var data = { status: text };
-    if (reply) data.in_reply_to_status_id = reply;
-    else if (replyingTo) {
-        var re = "@" + replyingTo.user;
-        if (text.indexOf(re) != -1)
-            data.in_reply_to_status_id = replyingTo.id;
-        replyingTo = null;
-    }
+function postUpdate(tweet, reply) {
     $("div.toolbar span.tweet").text("...");
-    //var auth = getLogin();
-    $.ajax({
-        url: "http://twitter.com/statuses/update.json",
-        data: data,
-        dataType: "text",
-        //username: auth.username,
-        //password: auth.password,
-        type: "POST",
-        error: function(request, error, trace) {
-            log(error);
-            log(trace);
-        },
-        success: function(data) {
-            updateInputCount();
-            populateTweets([nativeJSON.decode(data)]);
+    asyncGsub(function(text) {
+        var data = { status: text };
+        if (reply) data.in_reply_to_status_id = reply;
+        else if (replyingTo) {
+            var re = "@" + replyingTo.user;
+            if (text.indexOf(re) != -1)
+                data.in_reply_to_status_id = replyingTo.id;
+            replyingTo = null;
         }
-    });
+        $.ajax({
+            url: "http://twitter.com/statuses/update.json",
+            data: data,
+            dataType: "text",
+            type: "POST",
+            error: function(request, error, trace) {
+                log(error);
+                log(trace);
+            },
+            success: function(data) {
+                updateInputCount();
+                populateTweets([nativeJSON.decode(data)]);
+            }
+        });
+    }, tweet, urlRe, function(match, callback) { shortenUrl(match[0], callback); });
 }
