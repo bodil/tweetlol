@@ -6,7 +6,7 @@ var replyingTo = null;
 var nativeJSON = Components.classes["@mozilla.org/dom/json;1"].createInstance(Components.interfaces.nsIJSON);
 
 var urlRe = /https?:\/\/[^ ):]+/;
-var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+)/;
+var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?)/;
 
 $(document).ready(function() {
     $("#tweetbox").keyup(tweetInput);
@@ -210,7 +210,10 @@ function urlise(text) {
         if (url[0] == "@")
             return '@<a href="http://twitter.com/' + url.substring(1) + '">' + url.substring(1) + '</a>';
         if (url[0] == "#")
-            return '#<a href="http://search.twitter.com/?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
+            if (url[url.length-1] == ";")
+                return url;
+            else
+                return '#<a href="http://search.twitter.com/?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
         return '<a href="' + url + '">link</a>';
     });
 }
