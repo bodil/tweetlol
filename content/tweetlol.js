@@ -208,12 +208,12 @@ function urlise(text) {
     return gsub(text, urliseRe, function(url) {
         url = url[1];
         if (url[0] == "@")
-            return '@<a href="http://twitter.com/' + url.substring(1) + '">' + url.substring(1) + '</a>';
+            return '@<a resolved="true" href="http://twitter.com/' + url.substring(1) + '">' + url.substring(1) + '</a>';
         if (url[0] == "#")
             if (url[url.length-1] == ";")
                 return url;
             else
-                return '#<a href="http://search.twitter.com/?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
+                return '#<a resolved="true" href="http://search.twitter.com/?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
         return '<a href="' + url + '">link</a>';
     });
 }
@@ -237,6 +237,30 @@ function timeSince(date) {
     return readableTime(now.getTime() - date);
 }
   
+function resolveUrl(url, callback) {
+    var req = new XMLHttpRequest();
+    req.open("GET", url);
+    req.onreadystatechange = function(event) {
+        if (event.target.readyState == 2) {
+            var realUrl = event.target.channel.name;
+            event.target.onreadystatechange = null;
+            event.target.abort();
+            callback(realUrl);
+        }
+    };
+    req.send();
+}
+
+function resolveUrls(q) {
+    q.find("a").andSelf().filter("a[href][resolved!=true]").each(function() {
+        var a = $(this);
+        resolveUrl(a.attr("href"), function(url) {
+            a.attr("href", url).attr("resolved", "true");
+        });
+    });
+    return q;
+}
+
 function tweetToDOM(tweet) {
     var item = $('<li class="entry"/>').attr("id", tweet.id);
     item.append($('<img class="portrait" width="48" height="48"/>').attr("src", tweet.user.profile_image_url));
@@ -267,7 +291,7 @@ function tweetToDOM(tweet) {
     var favourite = $('<img src="icons/favourite' + (tweet.favorited ? "_on" : "") + '.gif"/>');
     toolbar.append(favourite);
     entry.append(header);
-    entry.append(fixUrl($('<p class="post"/>').html(urlise(tweet.text))));
+    entry.append(fixUrl(resolveUrls($('<p class="post"/>').html(urlise(tweet.text)))));
     entry.append(toolbar);
     entry.append(extra);
     item.append(entry);
