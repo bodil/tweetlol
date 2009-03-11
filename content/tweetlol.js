@@ -288,14 +288,14 @@ function tweetToDOM(tweet) {
     var time = Date.parse(tweet.created_at);
     extra.append(' <span class="time" time="' + time + '"></span> ago');
     var toolbar = $('<p class="toolbar"/>');
-    var reply = $('<img src="icons/reply.gif"/>');
+    var reply = $('<img src="icons/reply.gif" title="Reply to this"/>');
     toolbar.append(reply);
-    var retweet = $('<img src="icons/retweet.gif"/>');
+    var retweet = $('<img src="icons/retweet.gif" title="Retweet this"/>');
     toolbar.append(retweet);
     toolbar.append('<br/>')
-    var dm = $('<img src="icons/dm.gif"/>');
+    var dm = $('<img src="icons/dm.gif" title="Direct message"/>');
     toolbar.append(dm);
-    var favourite = $('<img src="icons/favourite' + (tweet.favorited ? "_on" : "") + '.gif"/>');
+    var favourite = $('<img src="icons/favourite' + (tweet.favorited ? "_on" : "") + '.gif" title="Favourite this"/>');
     toolbar.append(favourite);
     entry.append(header);
     var post = fixUrl($('<p class="post"/>').html(urlise(tweet.text)));
