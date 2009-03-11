@@ -1,7 +1,10 @@
 var lastTweet = 0;
-var tweetsPerPage = 50;
 var tweetTimer = null;
 var replyingTo = null;
+
+var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                    .getService(Components.interfaces.nsIPrefService);
+prefs = prefs.getBranch("extensions.tweetlol.");
 
 var nativeJSON = Components.classes["@mozilla.org/dom/json;1"].createInstance(Components.interfaces.nsIJSON);
 
@@ -11,13 +14,17 @@ var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?)/;
 $(document).ready(function() {
     $("#tweetbox").keyup(tweetInput);
     $("#tweetbox").keydown(tweetInputVerify);
-    $("#login input[name='save']").click(loginSave);
+    //$("#login input[name='save']").click(loginSave);
     $("ul.tabbar li").click(function(event) {
         $("ul.tabbar li").each(function() {
             if (this == event.target) $(this).addClass("active");
             else $(this).removeClass("active");
         });
         updateTabs();
+    });
+    $("#prefsButton").click(function() {
+        window.openDialog('chrome://tweetlol/content/prefs.xul', 'Tweetlol Preferences',
+                          'chrome,titlebar,toolbar,centerscreen,modal');
     });
     updateTabs();
     updateLayout();
@@ -291,7 +298,9 @@ function tweetToDOM(tweet) {
     var favourite = $('<img src="icons/favourite' + (tweet.favorited ? "_on" : "") + '.gif"/>');
     toolbar.append(favourite);
     entry.append(header);
-    entry.append(fixUrl(resolveUrls($('<p class="post"/>').html(urlise(tweet.text)))));
+    var post = fixUrl($('<p class="post"/>').html(urlise(tweet.text)));
+    if (prefs.getBoolPref("resolveLinks")) resolveUrls(post);
+    entry.append(post);
     entry.append(toolbar);
     entry.append(extra);
     item.append(entry);
@@ -377,14 +386,14 @@ function populateTweets(tweets) {
         $("#friendEntries").prepend(tweetToDOM(this));
         if (this.id > lastTweet) lastTweet = this.id;
     });
-    $("#friendEntries li:gt(" + (tweetsPerPage-1) + ")").remove();
+    $("#friendEntries li:gt(" + (prefs.getIntPref("tweetsPerPage")-1) + ")").remove();
     $("span.time").each(function() {
         $(this).text(timeSince(parseInt($(this).attr("time"))));
     });
 }
 
 function refreshTweets() {
-    data = { count: tweetsPerPage };
+    data = { count: prefs.getIntPref("tweetsPerPage") };
     if (lastTweet > 0) data.since_id = lastTweet;
     $.ajax({
         url: "http://twitter.com/statuses/friends_timeline.json",
@@ -398,7 +407,7 @@ function refreshTweets() {
         }
     });
     if (tweetTimer !== null) clearTimeout(tweetTimer);
-    tweetTimer = setTimeout(refreshTweets, 120000);
+    tweetTimer = setTimeout(refreshTweets, 60000 * prefs.getIntPref("refreshInterval"));
 }
 
 function postUpdate(tweet, reply) {
