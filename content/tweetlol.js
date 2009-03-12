@@ -352,9 +352,7 @@ function refreshTweets() {
              + prefs.getIntPref("tweetsPerPage"), true,
              login.username, login.password);
     req.onreadystatechange = function(event) {
-        log(event.target.readyState + " - " + event.target.channel.name);
         if (event.target.readyState == 4) {
-            log(event.target.responseText);
             var data = nativeJSON.decode(event.target.responseText);
             if (data.error) {
                 badLogin = true;
