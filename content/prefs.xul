@@ -7,36 +7,63 @@
 <!DOCTYPE page SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
 
 <prefwindow id="tweetlolPreferences" title="Tweetlol Preferences"
+            onload="initPrefsDialog();"
+            onunload="applyPrefsDialog();"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="prefs.js"/>
   <prefpane id="tweetlolPane1" label="Tweetlol">
     <preferences>
+      <preference id="username" name="extensions.tweetlol.username" type="string"/>
       <preference id="refreshInterval" name="extensions.tweetlol.refreshInterval" type="int"/>
       <preference id="tweetsPerPage" name="extensions.tweetlol.tweetsPerPage" type="int"/>
       <preference id="resolveLinks" name="extensions.tweetlol.resolveLinks" type="bool"/>
     </preferences>
     
-    <grid>
-        <columns>
-            <column flex="1"/>
-            <column flex="2"/>
-        </columns>
-        <rows>
-            <row align="center">
-                <label value="Tweets per page:" control="bTweetsPerPage" accesskey="p"/>
-                <textbox id="bTweetsPerPage" min="1" max="200" increment="5"
-                         preference="tweetsPerPage" type="number"/>
-            </row>
-            <row align="center">
-                <label value="Refresh interval:" control="bRefreshInterval" accesskey="i"/>
-                <hbox flex="1" align="center">
-                    <textbox id="bRefreshInterval" min="1" preference="refreshInterval" type="number"/>
-                    <label value="minutes" control="bRefreshInterval"/>
-                </hbox>
-            </row>
-        </rows>
-    </grid>
+    <groupbox>
+        <caption label="Twitter Account"/>
+        <grid>
+            <columns>
+                <column flex="1"/>
+                <column flex="2"/>
+            </columns>
+            <rows>
+                <row align="center">
+                    <label value="Username:" control="bUsername" accesskey="u"/>
+                    <textbox id="bUsername" preference="username"/>
+                </row>
+                <row align="center">
+                    <label value="Password:" control="bPassword" accesskey="p"/>
+                    <textbox id="bPassword" type="password"/>
+                </row>
+            </rows>
+        </grid>
+    </groupbox>
+    
+    <groupbox>
+        <caption label="Settings"/>
+        <grid>
+            <columns>
+                <column flex="1"/>
+                <column flex="2"/>
+            </columns>
+            <rows>
+                <row align="center">
+                    <label value="Tweets per page:" control="bTweetsPerPage" accesskey="p"/>
+                    <textbox id="bTweetsPerPage" min="1" max="200" increment="5"
+                             preference="tweetsPerPage" type="number"/>
+                </row>
+                <row align="center">
+                    <label value="Refresh interval:" control="bRefreshInterval" accesskey="i"/>
+                    <hbox flex="1" align="center">
+                        <textbox id="bRefreshInterval" min="1" preference="refreshInterval" type="number"/>
+                        <label value="minutes" control="bRefreshInterval"/>
+                    </hbox>
+                </row>
+            </rows>
+        </grid>
+        <checkbox id="bResolveLinks" preference="resolveLinks"
+                  label="Expand shortened links" accesskey="x"/>
+    </groupbox>
      
-    <checkbox id="bResolveLinks" preference="resolveLinks"
-              label="Expand shortened links" accesskey="x"/>
   </prefpane>
 </prefwindow>
