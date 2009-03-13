@@ -1,4 +1,13 @@
 <!ENTITY tweetlol.title     "Tweetlol">
 
+<!ENTITY tweetlol.prefs.title "Tweetlol Preferences">
+<!ENTITY tweetlol.prefs.tweetsPerPage "Tweets per page:">
+<!ENTITY tweetlol.prefs.tweetsPerPage.accesskey "p">
+<!ENTITY tweetlol.prefs.refreshInterval "Refresh interval:">
+<!ENTITY tweetlol.prefs.refreshInterval.minutes "minutes">
+<!ENTITY tweetlol.prefs.refreshInterval.accesskey "i">
+<!ENTITY tweetlol.prefs.resolveLinks "Expand shortened links">
+<!ENTITY tweetlol.prefs.resolveLinks.accesskey "x">
+
 <!ENTITY openTweetlolSidebar.commandkey    "L">
 <!ENTITY openTweetlolSidebar.modifierskey  "shift accel">
