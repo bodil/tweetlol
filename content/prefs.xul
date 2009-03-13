@@ -7,38 +7,65 @@
 <!DOCTYPE page SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
 
 <prefwindow id="tweetlolPreferences" title="$tweetlol.prefs.title;"
+            onload="initPrefsDialog();"
+            onunload="applyPrefsDialog();"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="prefs.js"/>
   <prefpane id="tweetlolPane1" label="$tweetlol.title;">
     <preferences>
+      <preference id="username" name="extensions.tweetlol.username" type="string"/>
       <preference id="refreshInterval" name="extensions.tweetlol.refreshInterval" type="int"/>
       <preference id="tweetsPerPage" name="extensions.tweetlol.tweetsPerPage" type="int"/>
       <preference id="resolveLinks" name="extensions.tweetlol.resolveLinks" type="bool"/>
     </preferences>
     
-    <grid>
-        <columns>
-            <column flex="1"/>
-            <column flex="2"/>
-        </columns>
-        <rows>
-            <row align="center">
-                <label value="&tweetlol.prefs.tweetsPerPage;" control="bTweetsPerPage"
-                	   accesskey="&tweetlol.prefs.tweetsPerPage.accesskey;"/>
-                <textbox id="bTweetsPerPage" min="1" max="200" increment="5"
-                         preference="tweetsPerPage" type="number"/>
-            </row>
-            <row align="center">
-                <label value="&tweetlol.prefs.refreshInterval;" control="bRefreshInterval"
-                	   accesskey="&tweetlol.prefs.refreshInterval.accesskey;"/>
-                <hbox flex="1" align="center">
-                    <textbox id="bRefreshInterval" min="1" preference="refreshInterval" type="number"/>
-                    <label value="&tweetlol.prefs.refreshInterval.minutes;" control="bRefreshInterval"/>
-                </hbox>
-            </row>
-        </rows>
-    </grid>
+    <groupbox>
+        <caption label="&tweetlol.prefs.accountGroup;"/>
+        <grid>
+            <columns>
+                <column flex="1"/>
+                <column flex="2"/>
+            </columns>
+            <rows>
+                <row align="center">
+                    <label value="&tweetlol.prefs.username;" control="bUsername" accesskey="&tweetlol.prefs.username.accesskey;"/>
+                    <textbox id="bUsername" preference="username"/>
+                </row>
+                <row align="center">
+                    <label value="&tweetlol.prefs.password;" control="bPassword" accesskey="&tweetlol.prefs.password.accesskey;"/>
+                    <textbox id="bPassword" type="password"/>
+                </row>
+            </rows>
+        </grid>
+    </groupbox>
+    
+    <groupbox>
+        <caption label="&tweetlol.prefs.settingsGroup;"/>
+        <grid>
+            <columns>
+                <column flex="1"/>
+                <column flex="2"/>
+            </columns>
+            <rows>
+                <row align="center">
+                    <label value="&tweetlol.prefs.tweetsPerPage;" control="bTweetsPerPage"
+                    	   accesskey="&tweetlol.prefs.tweetsPerPage.accesskey;"/>
+                    <textbox id="bTweetsPerPage" min="1" max="200" increment="5"
+                             preference="tweetsPerPage" type="number"/>
+                </row>
+                <row align="center">
+                    <label value="&tweetlol.prefs.refreshInterval;" control="bRefreshInterval"
+                    	   accesskey="&tweetlol.prefs.refreshInterval.accesskey;"/>
+                    <hbox flex="1" align="center">
+                        <textbox id="bRefreshInterval" min="1" preference="refreshInterval" type="number"/>
+                        <label value="minutes" control="bRefreshInterval"/>
+                    </hbox>
+                </row>
+            </rows>
+        </grid>
+        <checkbox id="bResolveLinks" preference="resolveLinks"
+                  label="&tweetlol.prefs.resolveLinks;" accesskey="&tweetlol.prefs.resolveLinks.accesskey;"/>
+    </groupbox>
      
-    <checkbox id="bResolveLinks" preference="resolveLinks"
-              label="&tweetlol.prefs.resolveLinks;" accesskey="&tweetlol.prefs.resolveLinks.accesskey;"/>
   </prefpane>
 </prefwindow>

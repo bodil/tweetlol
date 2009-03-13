@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="frame.css"/>
     <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="prefs.js"></script>
     <script type="text/javascript" src="tweetlol.js"></script>
     <script type="text/javascript">
         //<![CDATA[
@@ -14,19 +15,13 @@
 </head>
 <body>
     <div class="dialog" id="login">
-        <table>
-            <tbody>
-                <tr>
-                    <td>Username:</td><td><input type="text" name="username"/></td>
-                </tr>
-                <tr>
-                    <td>Password:</td><td><input type="password" name="password"/></td>
-                </tr>
-                <tr>
-                    <td class="error"/><td><input type="submit" name="save" value="Login"/></td>
-                </tr>
-            </tbody>
-        </table>
+        <p class="noLogin">You have not set your Twitter username and password.
+        Please go to the preferences now and do so.</p>
+        <p class="badLogin">The Twitter credentials you have entered are invalid.
+        Please go to the preferences now and correct them.</p>
+        <p align="center">
+            <button>Preferences</button>
+        </p>
     </div>
     
     <div id="prefsButton">&#x2692;</div>

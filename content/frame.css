@@ -99,6 +99,8 @@ p.postinfo {
     padding: 0.3em 1em;
     background-color: #448;
     color: black;
+    text-wrap: normal;
+    word-wrap: break-word;
 }
 
 p.postinfo2 {
@@ -139,6 +141,8 @@ p.postmore {
 p.post {
     margin: 0.3em 0;
     padding: 0.3em 1em;
+    text-wrap: normal;
+    word-wrap: break-word;
 }
 
 p.media {
@@ -155,6 +159,8 @@ p.mediaCaption {
 p.like {
     font-size: 0.9em;
     margin: 0.5em;
+    text-wrap: normal;
+    word-wrap: break-word;
 }
 
 p.like a {

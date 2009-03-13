@@ -1,6 +1,14 @@
 <!ENTITY tweetlol.title     "Tweetlol">
 
 <!ENTITY tweetlol.prefs.title "Tweetlol Preferences">
+
+<!ENTITY tweetlol.prefs.accountGroup "Twitter Account">
+<!ENTITY tweetlol.prefs.username "Username:">
+<!ENTITY tweetlol.prefs.username.accesskey "u">
+<!ENTITY tweetlol.prefs.password "Password:">
+<!ENTITY tweetlol.prefs.password.accesskey "p">
+
+<!ENTITY tweetlol.prefs.settingsGroup "Settings">
 <!ENTITY tweetlol.prefs.tweetsPerPage "Tweets per page:">
 <!ENTITY tweetlol.prefs.tweetsPerPage.accesskey "p">
 <!ENTITY tweetlol.prefs.refreshInterval "Refresh interval:">
