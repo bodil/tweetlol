@@ -348,8 +348,10 @@ function refreshTweets() {
     if (!login) return;
     var req = new XMLHttpRequest();
     req.mozBackgroundRequest = true;
-    req.open("GET", "http://twitter.com/statuses/friends_timeline.json?count="
-             + prefs.getIntPref("tweetsPerPage"), true,
+    var url = "http://twitter.com/statuses/friends_timeline.json?count="
+        + prefs.getIntPref("tweetsPerPage");
+    if (lastTweet > 0) url += "&since_id=" + lastTweet;
+    req.open("GET", url, true,
              login.username, login.password);
     req.onreadystatechange = function(event) {
         if (event.target.readyState == 4) {
