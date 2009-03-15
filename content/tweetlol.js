@@ -10,42 +10,13 @@ prefs = prefs.getBranch("extensions.tweetlol.");
 var observer = Components.classes["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
 
-var alerts = Components.classes["@mozilla.org/alerts-service;1"]
-                    .getService(Components.interfaces.nsIAlertsService);
-
 var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
                     .createInstance(Components.interfaces.nsIJSON);
 
 var urlRe = /https?:\/\/[^ ):]+/;
 var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?)/;
 
-var tweetListener = {
-    observe: function(subject, topic, data) {
-        if (!prefs.getBoolPref("displayAlerts")) return;
-        var tweets = nativeJSON.decode(data);
-        if (tweets.length > 0 && lastTweet > 0) {
-            var tweet = tweets[0];
-            var html = '<ul class="entries"><li class="entry">';
-            html += '<img class="portrait" width="48" height="48" src="' + tweet.user.profile_image_url + '"/>'
-            html += '<p class="postinfo"><a href="http://twitter.com/'
-                    + tweet.user.screen_name + '">' + tweet.user.name + "</a></p>"
-            html += '<p class="post">' + urlise(tweet.text, true) + '</p>';
-            html += '</li></ul>';
-            alerts.showAlertNotification("chrome://tweetlol/content/icons/tweetlol.png",
-                tweet.user.name, html,
-                false, "tweetlol"
-            );
-        }
-    }
-};
-
-$(window).unload(function() {
-    observer.removeObserver(tweetListener, "tweetlol-new-tweets");
-});
-
 $(document).ready(function() {
-    observer.addObserver(tweetListener, "tweetlol-new-tweets", false);
-    
     $("#tweetbox").keyup(tweetInput);
     $("#tweetbox").keydown(tweetInputVerify);
     //$("#login input[name='save']").click(loginSave);
@@ -368,7 +339,6 @@ function shortenUrl(url, callback) {
 }
 
 function populateTweets(tweets) {
-    observer.notifyObservers(null, "tweetlol-new-tweets", nativeJSON.encode(tweets));
     $.each(tweets.reverse(), function() {
         $("#friendEntries").prepend(tweetToDOM(this));
         if (this.id > lastTweet) lastTweet = this.id;

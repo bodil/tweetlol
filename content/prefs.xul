@@ -17,7 +17,6 @@
       <preference id="refreshInterval" name="extensions.tweetlol.refreshInterval" type="int"/>
       <preference id="tweetsPerPage" name="extensions.tweetlol.tweetsPerPage" type="int"/>
       <preference id="resolveLinks" name="extensions.tweetlol.resolveLinks" type="bool"/>
-      <preference id="displayAlerts" name="extensions.tweetlol.displayAlerts" type="bool"/>
     </preferences>
     
     <groupbox>
@@ -66,8 +65,6 @@
         </grid>
         <checkbox id="bResolveLinks" preference="resolveLinks"
                   label="&tweetlol.prefs.resolveLinks;" accesskey="&tweetlol.prefs.resolveLinks.accesskey;"/>
-        <checkbox id="bDisplayAlerts" preference="displayAlerts"
-                  label="&tweetlol.prefs.displayAlerts;" accesskey="&tweetlol.prefs.displayAlerts.accesskey;"/>
     </groupbox>
      
   </prefpane>

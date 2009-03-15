@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<!DOCTYPE overlay SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
-
-<overlay id="tweetlolAlertOverlay"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-    <script type="application/javascript" src="chrome://tweetlol/content/alert.js"/>
-    <script type="application/x-javascript">tweetlolAlertThing();</script>
-</overlay>

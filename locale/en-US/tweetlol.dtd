@@ -16,8 +16,6 @@
 <!ENTITY tweetlol.prefs.refreshInterval.accesskey "I">
 <!ENTITY tweetlol.prefs.resolveLinks "Expand shortened links">
 <!ENTITY tweetlol.prefs.resolveLinks.accesskey "X">
-<!ENTITY tweetlol.prefs.displayAlerts "Notification popups on new tweets">
-<!ENTITY tweetlol.prefs.displayAlerts.accesskey "N">
 
 <!ENTITY openTweetlolSidebar.commandkey    "L">
 <!ENTITY openTweetlolSidebar.modifierskey  "shift accel">
