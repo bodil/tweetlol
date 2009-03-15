@@ -23,7 +23,7 @@ var tweetListener = {
     observe: function(subject, topic, data) {
         if (!prefs.getBoolPref("displayAlerts")) return;
         var tweets = nativeJSON.decode(data);
-        if (tweets.length > 0) {
+        if (tweets.length > 0 && lastTweet > 0) {
             var tweet = tweets[0];
             var html = '<ul class="entries"><li class="entry">';
             html += '<img class="portrait" width="48" height="48" src="' + tweet.user.profile_image_url + '"/>'
