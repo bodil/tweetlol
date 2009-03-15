@@ -210,7 +210,7 @@ function urlise(text, keepExpandedText) {
 function readableTime(t) {
     t = Math.round(t / 1000);
     if (t < 60)
-        return t + " second" + ((t == 1) ? "" : "s");
+        return "less than a minute";
     t = Math.round(t / 60);
     if (t < 59)
         return t + " minute" + ((t == 1) ? "" : "s");
