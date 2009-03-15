@@ -428,7 +428,8 @@ function postUpdate(tweet, reply) {
             },
             success: function(data) {
                 updateInputCount();
-                populateTweets([nativeJSON.decode(data)]);
+                if (activeTab == "friends")
+                    populateTweets([nativeJSON.decode(data)], activeTab);
             }
         });
     }, tweet, urlRe, function(match, callback) { shortenUrl(match[0], callback); });
