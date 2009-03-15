@@ -4,18 +4,20 @@
 
 <!ENTITY tweetlol.prefs.accountGroup "Twitter Account">
 <!ENTITY tweetlol.prefs.username "Username:">
-<!ENTITY tweetlol.prefs.username.accesskey "u">
+<!ENTITY tweetlol.prefs.username.accesskey "U">
 <!ENTITY tweetlol.prefs.password "Password:">
-<!ENTITY tweetlol.prefs.password.accesskey "p">
+<!ENTITY tweetlol.prefs.password.accesskey "P">
 
 <!ENTITY tweetlol.prefs.settingsGroup "Settings">
 <!ENTITY tweetlol.prefs.tweetsPerPage "Tweets per page:">
-<!ENTITY tweetlol.prefs.tweetsPerPage.accesskey "p">
+<!ENTITY tweetlol.prefs.tweetsPerPage.accesskey "T">
 <!ENTITY tweetlol.prefs.refreshInterval "Refresh interval:">
 <!ENTITY tweetlol.prefs.refreshInterval.minutes "minutes">
-<!ENTITY tweetlol.prefs.refreshInterval.accesskey "i">
+<!ENTITY tweetlol.prefs.refreshInterval.accesskey "I">
 <!ENTITY tweetlol.prefs.resolveLinks "Expand shortened links">
-<!ENTITY tweetlol.prefs.resolveLinks.accesskey "x">
+<!ENTITY tweetlol.prefs.resolveLinks.accesskey "X">
+<!ENTITY tweetlol.prefs.displayAlerts "Notification popups on new tweets">
+<!ENTITY tweetlol.prefs.displayAlerts.accesskey "N">
 
 <!ENTITY openTweetlolSidebar.commandkey    "L">
 <!ENTITY openTweetlolSidebar.modifierskey  "shift accel">
