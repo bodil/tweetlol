@@ -8,7 +8,7 @@ function tweetlolAlertThing() {
             + '</body></html>';
             var iframe = document.createElement("iframe");
             iframe.setAttribute("id", "tweetlolAlertTextFrame");
-            iframe.setAttribute("src", 'data:text/html,' + content);
+            iframe.setAttribute("src", 'data:text/html;charset=utf-8,' + content);
             iframe.setAttribute("width", "300");
             label.parentNode.insertBefore(iframe, label);
             label.setAttribute("hidden", "true");
