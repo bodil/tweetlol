@@ -19,91 +19,21 @@ var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
 var urlRe = /https?:\/\/[^ ):]+/;
 var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?)/;
 
-function wordwrap( str, int_width, str_break, cut ) {
-    // Wraps buffer to selected number of characters using string break char  
-    // 
-    // version: 810.1317
-    // discuss at: http://phpjs.org/functions/wordwrap
-    // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
-    // +   improved by: Nick Callen
-    // +    revised by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: Sakimori
-    // *     example 1: wordwrap('Kevin van Zonneveld', 6, '|', true);
-    // *     returns 1: 'Kevin |van |Zonnev|eld'
-    // *     example 2: wordwrap('The quick brown fox jumped over the lazy dog.', 20, '<br />\n');
-    // *     returns 2: 'The quick brown fox <br />\njumped over the lazy<br />\n dog.'
-    // *     example 3: wordwrap('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
-    // *     returns 3: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod \ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim \nveniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea \ncommodo consequat.'
-    // PHP Defaults
-    var m = ((arguments.length >= 2) ? arguments[1] : 75   );
-    var b = ((arguments.length >= 3) ? arguments[2] : "\n" );
-    var c = ((arguments.length >= 4) ? arguments[3] : false);
-
-    var i, j, l, s, r;
-
-    str += '';
-
-    if (m < 1) {
-        return str;
-    }
-
-    for (i = -1, l = (r = str.split("\n")).length; ++i < l; r[i] += s) {
-        for(s = r[i], r[i] = ""; s.length > m; r[i] += s.slice(0, j) + ((s = s.slice(j)).length ? b : "")){
-            j = c == 2 || (j = s.slice(0, m + 1).match(/\S*(\s)?$/))[1] ? m : j.input.length - j[0].length || c == 1 && m || j.input.length + (j = s.slice(m).match(/^\S*/)).input.length;
-        }
-    }
-
-    return r.join("\n");
-}
-
-// From http://groups.google.com.na/group/mozilla.dev.extensions/browse_thread/thread/4cc6bb93cca2eb19
-function fixAlertNotification() {
-	// seek for alert window
-	var fixed = false;
-	var winEnum = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-
-	.getService(Components.interfaces.nsIWindowMediator)
-			.getXULWindowEnumerator(null);
-	var win = null;
-	while (winEnum.hasMoreElements())
-		try {
-			win = winEnum.getNext()
-					.QueryInterface(Components.interfaces.nsIXULWindow).docShell
-					.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-					.getInterface(Components.interfaces.nsIDOMWindow);
-			if (win.location == 'chrome://global/content/alerts/alert.xul') {
-				var orgLabel = win.document.getElementById('alertTextLabel');
-				var txt = orgLabel.value.split("\n"); // get original value,
-														// as lines
-				orgLabel.value = txt[0];// set original label to first line
-				// add subsequent lines
-				for (var i = 1; i < txt.length; i++) {
-					var label = orgLabel.cloneNode(true);
-					label.value = txt[i];
-					orgLabel.parentNode.appendChild(label);
-				}
-				// update alert size and position
-				win.onAlertLoad();
-
-				fixed = true;
-				break;
-			}
-		} catch (e) {
-		} // important: hide exceptions
-
-	if (!fixed)
-		window.setTimeout("fixAlertNotification()", 100);
-}
-
 var tweetListener = {
     observe: function(subject, topic, data) {
+        if (!prefs.getBoolPref("displayAlerts")) return;
         var tweets = nativeJSON.decode(data);
         if (tweets.length > 0) {
             var tweet = tweets[0];
+            var html = '<ul class="entries"><li class="entry">';
+            html += '<img class="portrait" width="48" height="48" src="' + tweet.user.profile_image_url + '"/>'
+            html += '<p class="postinfo"><a href="http://twitter.com/'
+                    + tweet.user.screen_name + '">' + tweet.user.name + "</a></p>"
+            html += '<p class="post">' + urlise(tweet.text, true) + '</p>';
+            html += '</li></ul>';
             alerts.showAlertNotification("chrome://tweetlol/content/icons/tweetlol.png",
-                tweet.user.name, "",
-                false, null, null, "Tweetlol"
+                tweet.user.name, html,
+                false, "tweetlol"
             );
         }
     }
@@ -171,7 +101,8 @@ function tweetInputVerify(event) {
 }
 
 function updateInputCount() {
-    $("div.toolbar span.tweet").text(140 - getInputCount());
+    var len = getInputCount();
+    $("div.toolbar span.tweet").text(140 - len);
     if (replyingTo && len == 0) replyingTo = null;
 }
 
@@ -262,7 +193,7 @@ function asyncGsub(callback, source, pattern, replacement) {
     recurse("", source);
 }
 
-function urlise(text) {
+function urlise(text, keepExpandedText) {
     return gsub(text, urliseRe, function(url) {
         url = url[1];
         if (url[0] == "@")
@@ -272,7 +203,7 @@ function urlise(text) {
                 return url;
             else
                 return '#<a resolved="true" href="http://search.twitter.com/?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
-        return '<a href="' + url + '">link</a>';
+        return '<a href="' + url + '">' + (keepExpandedText ? url : "link") + '</a>';
     });
 }
 
@@ -319,7 +250,7 @@ function resolveUrls(q) {
     return q;
 }
 
-function tweetToDOM(tweet) {
+function tweetToDOM(tweet, disableControls) {
     var item = $('<li class="entry"/>').attr("id", tweet.id);
     item.append($('<img class="portrait" width="48" height="48"/>').attr("src", tweet.user.profile_image_url));
     var entry = $('<div class="entry"/>');
@@ -338,29 +269,33 @@ function tweetToDOM(tweet) {
         extra.append(tweet.source);
     var time = Date.parse(tweet.created_at);
     extra.append(' <span class="time" time="' + time + '"></span> ago');
-    var toolbar = $('<p class="toolbar"/>');
-    var reply = $('<img src="icons/reply.gif" title="Reply to this"/>');
-    toolbar.append(reply);
-    var retweet = $('<img src="icons/retweet.gif" title="Retweet this"/>');
-    toolbar.append(retweet);
-    toolbar.append('<br/>')
-    var dm = $('<img src="icons/dm.gif" title="Direct message"/>');
-    toolbar.append(dm);
-    var favourite = $('<img src="icons/favourite' + (tweet.favorited ? "_on" : "") + '.gif" title="Favourite this"/>');
-    toolbar.append(favourite);
     entry.append(header);
     var post = fixUrl($('<p class="post"/>').html(urlise(tweet.text)));
-    if (prefs.getBoolPref("resolveLinks")) resolveUrls(post);
+    if (!disableControls && prefs.getBoolPref("resolveLinks")) resolveUrls(post);
     entry.append(post);
-    entry.append(toolbar);
+    if (!disableControls) {
+        var toolbar = $('<p class="toolbar"/>');
+        var reply = $('<img src="icons/reply.gif" title="Reply to this"/>');
+        toolbar.append(reply);
+        var retweet = $('<img src="icons/retweet.gif" title="Retweet this"/>');
+        toolbar.append(retweet);
+        toolbar.append('<br/>')
+        var dm = $('<img src="icons/dm.gif" title="Direct message"/>');
+        toolbar.append(dm);
+        var favourite = $('<img src="icons/favourite' + (tweet.favorited ? "_on" : "") + '.gif" title="Favourite this"/>');
+        toolbar.append(favourite);
+        entry.append(toolbar);
+    }
     entry.append(extra);
     item.append(entry);
-    
-    reply.click(function(event) { actionReply(tweet, item, event); });
-    retweet.click(function(event) { actionRetweet(tweet, item, event); });
-    dm.click(function(event) { actionDM(tweet, item, event); });
-    favourite.click(function(event) { actionFavourite(tweet, item, favourite, event); });
-    
+
+    if (!disableControls) {
+        reply.click(function(event) { actionReply(tweet, item, event); });
+        retweet.click(function(event) { actionRetweet(tweet, item, event); });
+        dm.click(function(event) { actionDM(tweet, item, event); });
+        favourite.click(function(event) { actionFavourite(tweet, item, favourite, event); });
+    }
+
     return item;
 }
 
