@@ -7,12 +7,115 @@ var prefs = Components.classes["@mozilla.org/preferences-service;1"]
                     .getService(Components.interfaces.nsIPrefService);
 prefs = prefs.getBranch("extensions.tweetlol.");
 
-var nativeJSON = Components.classes["@mozilla.org/dom/json;1"].createInstance(Components.interfaces.nsIJSON);
+var observer = Components.classes["@mozilla.org/observer-service;1"]
+                    .getService(Components.interfaces.nsIObserverService);
+
+var alerts = Components.classes["@mozilla.org/alerts-service;1"]
+                    .getService(Components.interfaces.nsIAlertsService);
+
+var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
+                    .createInstance(Components.interfaces.nsIJSON);
 
 var urlRe = /https?:\/\/[^ ):]+/;
 var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?)/;
 
+function wordwrap( str, int_width, str_break, cut ) {
+    // Wraps buffer to selected number of characters using string break char  
+    // 
+    // version: 810.1317
+    // discuss at: http://phpjs.org/functions/wordwrap
+    // +   original by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
+    // +   improved by: Nick Callen
+    // +    revised by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
+    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+    // +   improved by: Sakimori
+    // *     example 1: wordwrap('Kevin van Zonneveld', 6, '|', true);
+    // *     returns 1: 'Kevin |van |Zonnev|eld'
+    // *     example 2: wordwrap('The quick brown fox jumped over the lazy dog.', 20, '<br />\n');
+    // *     returns 2: 'The quick brown fox <br />\njumped over the lazy<br />\n dog.'
+    // *     example 3: wordwrap('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
+    // *     returns 3: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod \ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim \nveniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea \ncommodo consequat.'
+    // PHP Defaults
+    var m = ((arguments.length >= 2) ? arguments[1] : 75   );
+    var b = ((arguments.length >= 3) ? arguments[2] : "\n" );
+    var c = ((arguments.length >= 4) ? arguments[3] : false);
+
+    var i, j, l, s, r;
+
+    str += '';
+
+    if (m < 1) {
+        return str;
+    }
+
+    for (i = -1, l = (r = str.split("\n")).length; ++i < l; r[i] += s) {
+        for(s = r[i], r[i] = ""; s.length > m; r[i] += s.slice(0, j) + ((s = s.slice(j)).length ? b : "")){
+            j = c == 2 || (j = s.slice(0, m + 1).match(/\S*(\s)?$/))[1] ? m : j.input.length - j[0].length || c == 1 && m || j.input.length + (j = s.slice(m).match(/^\S*/)).input.length;
+        }
+    }
+
+    return r.join("\n");
+}
+
+// From http://groups.google.com.na/group/mozilla.dev.extensions/browse_thread/thread/4cc6bb93cca2eb19
+function fixAlertNotification() {
+	// seek for alert window
+	var fixed = false;
+	var winEnum = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+
+	.getService(Components.interfaces.nsIWindowMediator)
+			.getXULWindowEnumerator(null);
+	var win = null;
+	while (winEnum.hasMoreElements())
+		try {
+			win = winEnum.getNext()
+					.QueryInterface(Components.interfaces.nsIXULWindow).docShell
+					.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+					.getInterface(Components.interfaces.nsIDOMWindow);
+			if (win.location == 'chrome://global/content/alerts/alert.xul') {
+				var orgLabel = win.document.getElementById('alertTextLabel');
+				var txt = orgLabel.value.split("\n"); // get original value,
+														// as lines
+				orgLabel.value = txt[0];// set original label to first line
+				// add subsequent lines
+				for (var i = 1; i < txt.length; i++) {
+					var label = orgLabel.cloneNode(true);
+					label.value = txt[i];
+					orgLabel.parentNode.appendChild(label);
+				}
+				// update alert size and position
+				win.onAlertLoad();
+
+				fixed = true;
+				break;
+			}
+		} catch (e) {
+		} // important: hide exceptions
+
+	if (!fixed)
+		window.setTimeout("fixAlertNotification()", 100);
+}
+
+var tweetListener = {
+    observe: function(subject, topic, data) {
+        var tweets = nativeJSON.decode(data);
+        if (tweets.length > 0) {
+            var tweet = tweets[0];
+            alerts.showAlertNotification("chrome://tweetlol/content/icons/tweetlol.png",
+                tweet.user.name, "",
+                false, null, null, "Tweetlol"
+            );
+        }
+    }
+};
+
+$(window).unload(function() {
+    observer.removeObserver(tweetListener, "tweetlol-new-tweets");
+});
+
 $(document).ready(function() {
+    observer.addObserver(tweetListener, "tweetlol-new-tweets", false);
+    
     $("#tweetbox").keyup(tweetInput);
     $("#tweetbox").keydown(tweetInputVerify);
     //$("#login input[name='save']").click(loginSave);
@@ -330,6 +433,7 @@ function shortenUrl(url, callback) {
 }
 
 function populateTweets(tweets) {
+    observer.notifyObservers(null, "tweetlol-new-tweets", nativeJSON.encode(tweets));
     $.each(tweets.reverse(), function() {
         $("#friendEntries").prepend(tweetToDOM(this));
         if (this.id > lastTweet) lastTweet = this.id;

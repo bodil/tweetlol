@@ -10,7 +10,7 @@
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
 
 <vbox flex="1">
-    <iframe id="frameid" src="chrome://tweetlol/content/tweetlol.html" flex="1"/>
+    <iframe id="sbTweetlolSidebarFrame" src="chrome://tweetlol/content/tweetlol.html" flex="1"/>
 </vbox>
 
 </page>
