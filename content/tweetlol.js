@@ -1,7 +1,9 @@
-var lastTweet = 0;
+var lastTweet = { "friends": 0, "replies": 0 };
+var lastUpdate = { "friends": 0, "replies": 0 };
 var tweetTimer = null;
 var replyingTo = null;
 var badLogin = false;
+var activeTab = "friends";
 
 var prefs = Components.classes["@mozilla.org/preferences-service;1"]
                     .getService(Components.interfaces.nsIPrefService);
@@ -91,11 +93,21 @@ function updateLayout() {
 }
 
 function updateTabs() {
+    var old = activeTab;
     $("ul.tabbar li").each(function() {
         var view = $("#" + $(this).attr("id") + "View");
-        if ($(this).hasClass("active")) $(view).show();
+        if ($(this).hasClass("active")) {
+            activeTab = $(this).attr("id");
+            $(view).show();
+        }
         else $(view).hide();
     });
+    if (old != activeTab) {
+        var last = lastUpdate[activeTab];
+        var now = new Date().getTime();
+        last += 60000 * prefs.getIntPref("refreshInterval");
+        if (last < now) refreshTweets();
+    }
 }
 
 function log(msg) {
@@ -338,12 +350,12 @@ function shortenUrl(url, callback) {
     }
 }
 
-function populateTweets(tweets) {
+function populateTweets(tweets, tab) {
     $.each(tweets.reverse(), function() {
-        $("#friendEntries").prepend(tweetToDOM(this));
-        if (this.id > lastTweet) lastTweet = this.id;
+        $("#" + tab + "Entries").prepend(tweetToDOM(this));
+        if (this.id > lastTweet[tab]) lastTweet[tab] = this.id;
     });
-    $("#friendEntries li:gt(" + (prefs.getIntPref("tweetsPerPage")-1) + ")").remove();
+    $("#" + tab + "Entries li:gt(" + (prefs.getIntPref("tweetsPerPage")-1) + ")").remove();
     $("span.time").each(function() {
         $(this).text(timeSince(parseInt($(this).attr("time"))));
     });
@@ -357,9 +369,18 @@ function refreshTweets() {
     if (!login) return;
     var req = new XMLHttpRequest();
     req.mozBackgroundRequest = true;
-    var url = "http://twitter.com/statuses/friends_timeline.json?count="
-        + prefs.getIntPref("tweetsPerPage");
-    if (lastTweet > 0) url += "&since_id=" + lastTweet;
+    var tab = activeTab;
+    var url = "http://twitter.com/";
+    switch (tab) {
+        case "friends":
+            url += "statuses/friends_timeline";
+            break;
+        case "replies":
+            url += "statuses/replies";
+            break;
+    }
+    url += ".json?count=" + prefs.getIntPref("tweetsPerPage");
+    if (lastTweet[tab] > 0) url += "&since_id=" + lastTweet[tab];
     req.open("GET", url, true,
              login.username, login.password);
     req.onreadystatechange = function(event) {
@@ -369,11 +390,12 @@ function refreshTweets() {
                 badLogin = true;
                 startApp();
             } else {
-                populateTweets(data);
+                populateTweets(data, tab);
             }
         }
     };
     req.send();
+    lastUpdate[tab] = new Date().getTime();
     if (tweetTimer !== null) clearTimeout(tweetTimer);
     tweetTimer = setTimeout(refreshTweets, 60000 * prefs.getIntPref("refreshInterval"));
 }
