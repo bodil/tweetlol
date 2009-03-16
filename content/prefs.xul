@@ -6,7 +6,7 @@
 
 <!DOCTYPE page SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
 
-<prefwindow id="tweetlolPreferences" title="$tweetlol.prefs.title;"
+<prefwindow id="tweetlolPreferences" title="&tweetlol.prefs.title;"
             onload="initPrefsDialog();"
             onunload="applyPrefsDialog();"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
