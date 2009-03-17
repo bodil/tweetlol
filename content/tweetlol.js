@@ -407,7 +407,7 @@ function postUpdate(tweet, reply) {
     if (!login) return;
     $("div.toolbar span.tweet").text("...");
     asyncGsub(function(text) {
-        var data = { status: text };
+        var data = { status: text, source: "tweetlol" };
         if (reply) data.in_reply_to_status_id = reply;
         else if (replyingTo) {
             var re = "@" + replyingTo.user;
