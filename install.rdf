@@ -5,7 +5,7 @@
 
     <Description about="urn:mozilla:install-manifest">
         <em:name>tweetlol</em:name>
-        <em:version>0.1.20090315</em:version>
+        <em:version>0.1.20090317</em:version>
         <em:description>lol for your tweets!</em:description>
         <em:creator>Bodil Stokke</em:creator>
         <em:id>tweetlol@tweetlol.net</em:id>
@@ -21,6 +21,6 @@
         </em:targetApplication>
 
         <em:iconURL>chrome://tweetlol/content/icons/tweetlol.png</em:iconURL>
-        <em:homepageURL></em:homepageURL>
+        <em:homepageURL>http://www.tweetlol.net/</em:homepageURL>
     </Description>
 </RDF>
