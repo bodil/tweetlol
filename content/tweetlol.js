@@ -225,7 +225,7 @@ function resolveUrl(url, callback) {
             callback(realUrl);
         }
     };
-    req.send();
+    req.send("");
 }
 
 function resolveUrls(q) {
@@ -386,6 +386,7 @@ function refreshTweets() {
     }
     url += ".json?count=" + prefs.getIntPref("tweetsPerPage");
     if (lastTweet[tab] > 0) url += "&since_id=" + lastTweet[tab];
+    log("ajax: " + url);
     req.open("GET", url, true,
              login.username, login.password);
     req.onreadystatechange = function(event) {
@@ -395,11 +396,15 @@ function refreshTweets() {
                 badLogin = true;
                 startApp();
             } else {
-                populateTweets(data, tab);
+                try {
+                    populateTweets(data, tab);
+                } catch(e) {
+                    log("error: " + e);
+                }
             }
         }
     };
-    req.send();
+    req.send("");
     lastUpdate[tab] = new Date().getTime();
     if (tweetTimer !== null) clearTimeout(tweetTimer);
     tweetTimer = setTimeout(refreshTweets, 60000 * prefs.getIntPref("refreshInterval"));
