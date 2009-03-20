@@ -5,7 +5,7 @@
 
     <Description about="urn:mozilla:install-manifest">
         <em:name>tweetlol</em:name>
-        <em:version>0.1.20090317.1</em:version>
+        <em:version>0.1.20090320</em:version>
         <em:description>lol for your tweets!</em:description>
         <em:creator>Bodil Stokke</em:creator>
         <em:id>tweetlol@tweetlol.net</em:id>
