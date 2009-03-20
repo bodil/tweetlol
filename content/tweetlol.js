@@ -111,7 +111,12 @@ function updateTabs() {
 }
 
 function log(msg) {
-    Application.console.log("tweetlol: " + msg);
+    if (prefs.getBoolPref("debug")) {
+        if (window.console)
+            window.console.log("tweetlol: " + msg);
+        else
+            Application.console.log("tweetlol: " + msg);
+    }
 }
 
 function nsUrl(spec) {
