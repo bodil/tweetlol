@@ -16,7 +16,7 @@ var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
                     .createInstance(Components.interfaces.nsIJSON);
 
 var urlRe = /https?:\/\/[^ ):]+/;
-var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?)/;
+var urliseRe = /(https?:\/\/[^ ):]+|[@#][a-zA-Z0-9_]+;?|spotify:[a-zA-Z0-9:]+)/;
 
 $(document).ready(function() {
     $("#tweetbox").keyup(tweetInput);
