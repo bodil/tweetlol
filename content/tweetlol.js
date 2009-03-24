@@ -185,7 +185,7 @@ function urlise(text, keepExpandedText) {
             if (url[url.length-1] == ";")
                 return url;
             else
-                return '#<a resolved="true" href="http://search.twitter.com/?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
+                return '#<a resolved="true" href="http://search.twitter.com/search?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
         return '<a href="' + url + '">' + (keepExpandedText ? url : "link") + '</a>';
     });
 }
