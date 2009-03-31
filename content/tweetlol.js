@@ -307,7 +307,7 @@ function actionRetweet(tweet, item, event) {
     var box = $("#tweetbox");
     box.val("RT @" + tweet.user.screen_name + ": " + tweet.text);
     box.focus();
-    replyingTo = { user: tweet.user.screen_name, id: tweet.id };
+    replyingTo = null;
     updateInputCount();
 }
 
