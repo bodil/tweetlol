@@ -439,7 +439,8 @@ function postUpdate(tweet, reply) {
             success: function(data) {
                 updateInputCount();
                 if (activeTab == "friends")
-                    populateTweets([nativeJSON.decode(data)], activeTab);
+                    //populateTweets([nativeJSON.decode(data)], activeTab);
+                    refreshTweets();
             }
         });
     }, tweet, urlRe, function(match, callback) { shortenUrl(match[0], callback); });
