@@ -125,7 +125,9 @@ function nsUrl(spec) {
 }
 
 function newTab(url) {
-    Application.activeWindow.open(nsUrl(url));
+    var tab = Application.activeWindow.open(nsUrl(url));
+    if (!prefs.getBoolPref("backgroundTabs"))
+        tab.focus();
     return false;
 }
 
