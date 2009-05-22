@@ -5,7 +5,7 @@
 
     <Description about="urn:mozilla:install-manifest">
         <em:name>tweetlol</em:name>
-        <em:version>0.1.20090320</em:version>
+        <em:version>0.1.20090522</em:version>
         <em:description>lol for your tweets!</em:description>
         <em:creator>Bodil Stokke</em:creator>
         <em:id>tweetlol@tweetlol.net</em:id>
@@ -16,7 +16,7 @@
             <Description>
                 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
                 <em:minVersion>3.0</em:minVersion>
-                <em:maxVersion>3.5b4pre</em:maxVersion>
+                <em:maxVersion>3.5b4</em:maxVersion>
             </Description>
         </em:targetApplication>
 
