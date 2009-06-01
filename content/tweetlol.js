@@ -68,7 +68,7 @@ function tweetInput(event) {
 }
 
 function tweetInputVerify(event) {
-    if (event.keyCode > 31 && getInputCount() >= 140) {
+    if ((event.keyCode == 32 || event.keyCode > 40) && getInputCount() >= 140) {
         event.preventDefault();
     }
 }
