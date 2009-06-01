@@ -74,8 +74,10 @@ function tweetInputVerify(event) {
 }
 
 function updateInputCount() {
-    var len = getInputCount();
-    $("div.toolbar span.tweet").text(140 - len);
+    var len = 140 - getInputCount();
+    if (len < prefs.getCharPref("username").length + 6)
+        len = len.toString() + "!";
+    $("div.toolbar span.tweet").text(len);
     if (replyingTo && len == 0) replyingTo = null;
 }
 
