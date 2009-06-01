@@ -18,6 +18,32 @@ var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
 var urlRe = /https?:\/\/[^ ):]+/;
 var urliseRe = /(https?:\/\/[^ ):]+|@[a-zA-Z0-9_]+|#(?:\w|[0-9&#;_'æøåÆØÅ])+|spotify:[a-zA-Z0-9:]+)/;
 
+function apiUrl(path) {
+    if (!path) path = "";
+    var service = prefs.getCharPref("service");
+    if (service == "identica") return "http://identi.ca/api/" + path;
+    return "http://twitter.com/" + path;
+}
+
+function userUrl(user) {
+    var service = prefs.getCharPref("service");
+    if (service == "identica") return "http://identi.ca/" + user;
+    return "http://twitter.com/" + user;
+}
+
+function searchUrl(term) {
+    var service = prefs.getCharPref("service");
+    term = encodeURIComponent(term);
+    if (service == "identica") return "http://identi.ca/tag/" + term;
+    return "http://search.twitter.com/search?q=" + term;
+}
+
+function noticeUrl(user, id) {
+    var service = prefs.getCharPref("service");
+    if (service == "identica") return "http://identi.ca/notice/" + id;
+    return "http://twitter.com/" + user + "/status/" + id;
+}
+
 $(document).ready(function() {
     $("#tweetbox").keyup(tweetInput);
     $("#tweetbox").keydown(tweetInputVerify);
@@ -188,12 +214,12 @@ function urlise(text, keepExpandedText) {
     return gsub(text, urliseRe, function(url) {
         url = url[1];
         if (url[0] == "@")
-            return '@<a resolved="true" href="http://twitter.com/' + url.substring(1) + '">' + url.substring(1) + '</a>';
+            return '@<a resolved="true" href="' + userUrl(url.substring(1)) + '">' + url.substring(1) + '</a>';
         if (url[0] == "#")
             if (url[url.length-1] == ";")
                 return url;
             else
-                return '#<a resolved="true" href="http://search.twitter.com/search?q=' + url.substring(1) + '">' + url.substring(1) + '</a>';
+                return '#<a resolved="true" href="' + searchUrl(url.substring(1)) + '">' + url.substring(1) + '</a>';
         return '<a href="' + url + '">' + (keepExpandedText ? url : "link") + '</a>';
     });
 }
@@ -246,12 +272,12 @@ function tweetToDOM(tweet, disableControls) {
     item.append($('<img class="portrait" width="48" height="48"/>').attr("src", tweet.user.profile_image_url));
     var entry = $('<div class="entry"/>');
     var header = $('<p class="postinfo"/>');
-    header.append(url("http://twitter.com/"+tweet.user.screen_name, tweet.user.name));
+    header.append(url(userUrl(tweet.user.screen_name), tweet.user.name));
     var extra = $('<p class="like"/>');
     if (tweet.in_reply_to_status_id) {
         extra.append('in reply to ');
-        extra.append(url("http://twitter.com/" + tweet.in_reply_to_screen_name + "/status/"
-                         + tweet.in_reply_to_status_id, tweet.in_reply_to_screen_name));
+        extra.append(url(noticeUrl(tweet.in_reply_to_screen_name,
+                           tweet.in_reply_to_status_id), tweet.in_reply_to_screen_name));
     }
     extra.append(" via ");
     if (tweet.source.charAt(0) == "<")
@@ -318,7 +344,7 @@ function actionFavourite(tweet, item, fave, event) {
     if (fave.attr("src").indexOf("_on") == -1) {
         fave.attr("src", "icons/favourite_on.gif");
         $.ajax({
-            url: "http://twitter.com/favorites/create/" + tweet.id + ".json",
+            url: apiUrl("favorites/create/" + tweet.id + ".json"),
             type: "POST",
             dataType: "text",
             error: function(request, error) {
@@ -329,7 +355,7 @@ function actionFavourite(tweet, item, fave, event) {
     } else {
         fave.attr("src", "icons/favourite.gif");
         $.ajax({
-            url: "http://twitter.com/favorites/destroy/" + tweet.id + ".json",
+            url: apiUrl("favorites/destroy/" + tweet.id + ".json"),
             type: "POST",
             dataType: "text",
             error: function(request, error) {
@@ -378,7 +404,7 @@ function refreshTweets() {
     var req = new XMLHttpRequest();
     req.mozBackgroundRequest = true;
     var tab = activeTab;
-    var url = "http://twitter.com/";
+    var url = apiUrl();
     switch (tab) {
         case "friends":
             url += "statuses/friends_timeline";
@@ -429,7 +455,7 @@ function postUpdate(tweet, reply) {
             replyingTo = null;
         }
         $.ajax({
-            url: "http://twitter.com/statuses/update.json",
+            url: apiUrl("statuses/update.json"),
             data: data,
             dataType: "text",
             type: "POST",

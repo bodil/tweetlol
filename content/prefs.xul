@@ -13,6 +13,7 @@
   <script src="prefs.js"/>
   <prefpane id="tweetlolPane1" label="$tweetlol.title;">
     <preferences>
+      <preference id="service" name="extensions.tweetlol.service" type="string"/>
       <preference id="username" name="extensions.tweetlol.username" type="string"/>
       <preference id="refreshInterval" name="extensions.tweetlol.refreshInterval" type="int"/>
       <preference id="tweetsPerPage" name="extensions.tweetlol.tweetsPerPage" type="int"/>
@@ -28,6 +29,15 @@
                 <column flex="2"/>
             </columns>
             <rows>
+                <row align="center">
+                    <label value="&tweetlol.prefs.service;" control="bService" accesskey="&tweetlol.prefs.service.accesskey;"/>
+                    <menulist id="bService" preference="service">
+                        <menupopup>
+                            <menuitem label="&tweetlol.service.twitter;" value="twitter"/>
+                            <menuitem label="&tweetlol.service.identica;" value="identica"/>
+                        </menupopup>
+                    </menulist>
+                </row>
                 <row align="center">
                     <label value="&tweetlol.prefs.username;" control="bUsername" accesskey="&tweetlol.prefs.username.accesskey;"/>
                     <textbox id="bUsername" preference="username"/>

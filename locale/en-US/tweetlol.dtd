@@ -2,7 +2,9 @@
 
 <!ENTITY tweetlol.prefs.title "Tweetlol Preferences">
 
-<!ENTITY tweetlol.prefs.accountGroup "Twitter Account">
+<!ENTITY tweetlol.prefs.accountGroup "Account">
+<!ENTITY tweetlol.prefs.service "Service:">
+<!ENTITY tweetlol.prefs.service.accesskey "V">
 <!ENTITY tweetlol.prefs.username "Username:">
 <!ENTITY tweetlol.prefs.username.accesskey "U">
 <!ENTITY tweetlol.prefs.password "Password:">
@@ -18,6 +20,9 @@
 <!ENTITY tweetlol.prefs.resolveLinks.accesskey "X">
 <!ENTITY tweetlol.prefs.backgroundTabs "Open new tabs in the background">
 <!ENTITY tweetlol.prefs.backgroundTabs.accesskey "B">
+
+<!ENTITY tweetlol.service.twitter "Twitter">
+<!ENTITY tweetlol.service.identica "Identi.ca">
 
 <!ENTITY openTweetlolSidebar.commandkey    "L">
 <!ENTITY openTweetlolSidebar.modifierskey  "shift accel">

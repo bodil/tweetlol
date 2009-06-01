@@ -4,3 +4,4 @@ pref("extensions.tweetlol.tweetsPerPage", 50);
 pref("extensions.tweetlol.resolveLinks", false);
 pref("extensions.tweetlol.debug", false);
 pref("extensions.tweetlol.backgroundTabs", true);
+pref("extensions.tweetlol.service", "twitter");
