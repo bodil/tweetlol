@@ -5,10 +5,6 @@ var replyingTo = null;
 var badLogin = false;
 var activeTab = "friends";
 
-var prefs = Components.classes["@mozilla.org/preferences-service;1"]
-                    .getService(Components.interfaces.nsIPrefService);
-prefs = prefs.getBranch("extensions.tweetlol.");
-
 var observer = Components.classes["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
 
@@ -20,26 +16,26 @@ var urliseRe = /(https?:\/\/[^ ):]+|@[a-zA-Z0-9_]+|#(?:\w|[0-9&#;_'æøåÆØÅ]
 
 function apiUrl(path) {
     if (!path) path = "";
-    var service = prefs.getCharPref("service");
+    var service = Tweetlol.prefs.getCharPref("service");
     if (service == "identica") return "http://identi.ca/api/" + path;
     return "http://twitter.com/" + path;
 }
 
 function userUrl(user) {
-    var service = prefs.getCharPref("service");
+    var service = Tweetlol.prefs.getCharPref("service");
     if (service == "identica") return "http://identi.ca/" + user;
     return "http://twitter.com/" + user;
 }
 
 function searchUrl(term) {
-    var service = prefs.getCharPref("service");
+    var service = Tweetlol.prefs.getCharPref("service");
     term = encodeURIComponent(term);
     if (service == "identica") return "http://identi.ca/tag/" + term;
     return "http://search.twitter.com/search?q=" + term;
 }
 
 function noticeUrl(user, id) {
-    var service = prefs.getCharPref("service");
+    var service = Tweetlol.prefs.getCharPref("service");
     if (service == "identica") return "http://identi.ca/notice/" + id;
     return "http://twitter.com/" + user + "/status/" + id;
 }
@@ -69,7 +65,7 @@ $(document).ready(function() {
 
 function startApp() {
     if (tweetTimer !== null) clearTimeout(tweetTimer);
-    if (badLogin || !prefs.getCharPref("username") || !getLogin(prefs.getCharPref("username"))) {
+    if (badLogin || !Tweetlol.prefs.getCharPref("username") || !getLogin(Tweetlol.prefs.getCharPref("username"))) {
         if (badLogin) {
             $("#login .badLogin").show();
             $("#login .noLogin").hide();
@@ -100,7 +96,7 @@ function tweetInputVerify(event) {
 
 function updateInputCount() {
     var len = 140 - getInputCount();
-    if (len < prefs.getCharPref("username").length + 6)
+    if (len < Tweetlol.prefs.getCharPref("username").length + 6)
         len = len.toString() + "!";
     $("div.toolbar span.tweet").text(len);
     if (replyingTo && len == 0) replyingTo = null;
@@ -132,30 +128,9 @@ function updateTabs() {
     if (old != activeTab) {
         var last = lastUpdate[activeTab];
         var now = new Date().getTime();
-        last += 60000 * prefs.getIntPref("refreshInterval");
+        last += 60000 * Tweetlol.prefs.getIntPref("refreshInterval");
         if (last < now) refreshTweets();
     }
-}
-
-function log(msg) {
-    if (prefs.getBoolPref("debug")) {
-        if (window.console)
-            window.console.log("tweetlol: " + msg);
-        else
-            Application.console.log("tweetlol: " + msg);
-    }
-}
-
-function nsUrl(spec) {
-  var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-  return ios.newURI(spec, null, null);
-}
-
-function newTab(url) {
-    var tab = Application.activeWindow.open(nsUrl(url));
-    if (!prefs.getBoolPref("backgroundTabs"))
-        tab.focus();
-    return false;
 }
 
 function url(url, text) {
@@ -168,7 +143,7 @@ function url(url, text) {
 
 function fixUrl(url) {
     url.find("a").andSelf().filter("a[href]").click(function(event) {
-        return newTab(event.target.href);
+        return Tweetlol.newTab(event.target.href);
     });
     return url;
 }
@@ -288,7 +263,7 @@ function tweetToDOM(tweet, disableControls) {
     extra.append(' <span class="time" time="' + time + '"></span> ago');
     entry.append(header);
     var post = fixUrl($('<p class="post"/>').html(urlise(tweet.text)));
-    if (!disableControls && prefs.getBoolPref("resolveLinks")) resolveUrls(post);
+    if (!disableControls && Tweetlol.prefs.getBoolPref("resolveLinks")) resolveUrls(post);
     entry.append(post);
     if (!disableControls) {
         var toolbar = $('<p class="toolbar"/>');
@@ -348,7 +323,7 @@ function actionFavourite(tweet, item, fave, event) {
             type: "POST",
             dataType: "text",
             error: function(request, error) {
-                log(error);
+                Tweetlol.log(error);
             },
             success: function(data) {}
         });
@@ -359,7 +334,7 @@ function actionFavourite(tweet, item, fave, event) {
             type: "POST",
             dataType: "text",
             error: function(request, error) {
-                log(error);
+                Tweetlol.log(error);
             },
             success: function(data) {}
         });
@@ -389,7 +364,7 @@ function populateTweets(tweets, tab) {
         $("#" + tab + "Entries").prepend(tweetToDOM(this));
         if (this.id > lastTweet[tab]) lastTweet[tab] = this.id;
     });
-    $("#" + tab + "Entries li:gt(" + (prefs.getIntPref("tweetsPerPage")-1) + ")").remove();
+    $("#" + tab + "Entries li:gt(" + (Tweetlol.prefs.getIntPref("tweetsPerPage")-1) + ")").remove();
     $("span.time").each(function() {
         $(this).text(timeSince(parseInt($(this).attr("time"))));
     });
@@ -397,9 +372,9 @@ function populateTweets(tweets, tab) {
 
 function refreshTweets() {
     badLogin = false;
-    var username = prefs.getCharPref("username");
+    var username = Tweetlol.prefs.getCharPref("username");
     if (!username) return;
-    var login = getLogin(prefs.getCharPref("username"));
+    var login = getLogin(Tweetlol.prefs.getCharPref("username"));
     if (!login) return;
     var req = new XMLHttpRequest();
     req.mozBackgroundRequest = true;
@@ -413,9 +388,9 @@ function refreshTweets() {
             url += "statuses/replies";
             break;
     }
-    url += ".json?count=" + prefs.getIntPref("tweetsPerPage");
+    url += ".json?count=" + Tweetlol.prefs.getIntPref("tweetsPerPage");
     if (lastTweet[tab] > 0) url += "&since_id=" + lastTweet[tab];
-    log("ajax: " + url);
+    Tweetlol.log("ajax: " + url);
     req.open("GET", url, true,
              login.username, login.password);
     req.onreadystatechange = function(event) {
@@ -428,7 +403,7 @@ function refreshTweets() {
                 try {
                     populateTweets(data, tab);
                 } catch(e) {
-                    log("error: " + e);
+                    Tweetlol.log("error: " + e);
                 }
             }
         }
@@ -436,13 +411,13 @@ function refreshTweets() {
     req.send("");
     lastUpdate[tab] = new Date().getTime();
     if (tweetTimer !== null) clearTimeout(tweetTimer);
-    tweetTimer = setTimeout(refreshTweets, 60000 * prefs.getIntPref("refreshInterval"));
+    tweetTimer = setTimeout(refreshTweets, 60000 * Tweetlol.prefs.getIntPref("refreshInterval"));
 }
 
 function postUpdate(tweet, reply) {
-    var username = prefs.getCharPref("username");
+    var username = Tweetlol.prefs.getCharPref("username");
     if (!username) return;
-    var login = getLogin(prefs.getCharPref("username"));
+    var login = getLogin(Tweetlol.prefs.getCharPref("username"));
     if (!login) return;
     $("div.toolbar span.tweet").text("...");
     asyncGsub(function(text) {
@@ -462,8 +437,8 @@ function postUpdate(tweet, reply) {
             username: login.username,
             password: login.password,
             error: function(request, error, trace) {
-                log(error);
-                log(trace);
+                Tweetlol.log(error);
+                Tweetlol.log(trace);
             },
             success: function(data) {
                 updateInputCount();
