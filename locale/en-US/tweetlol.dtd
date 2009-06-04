@@ -24,5 +24,7 @@
 <!ENTITY tweetlol.service.twitter "Twitter">
 <!ENTITY tweetlol.service.identica "Identi.ca">
 
+<!ENTITY tweetlol.statusbar.tooltip "Toggle the Tweetlol sidebar">
+
 <!ENTITY openTweetlolSidebar.commandkey    "L">
 <!ENTITY openTweetlolSidebar.modifierskey  "shift accel">

@@ -24,5 +24,14 @@
             sidebarTitle="&tweetlol.title;"
             oncommand="toggleSidebar('viewTweetlolSidebar');" />
     </broadcasterset>
+    
+    <statusbar id="status-bar">
+        <statusbarpanel id="tweetlolStatusBarButton" position="1"
+                        tooltiptext="&tweetlol.statusbar.tooltip;"
+                        onclick="toggleSidebar('viewTweetlolSidebar');">
+            <image id="tweetlolStatusBarButtonIcon" 
+                   src="chrome://tweetlol/content/icons/statusbar.png"/>
+        </statusbarpanel>
+    </statusbar>
 
 </overlay>
