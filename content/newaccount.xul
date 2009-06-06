@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type"text/css" ?>
+<?xml-stylesheet href="chrome://browser/skin/browser.css" type="text/css" ?>
+<?xml-stylesheet href="chrome://tweetlol/skin/tweetlol.css" type="text/css"?>
+
+<!DOCTYPE page SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
+
+<wizard id="newAccountWizard" title="&tweetlol.newAccountWizard.title;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script type="application/x-javascript" src="chrome://tweetlol/content/util.js"/>
+    <script type="application/x-javascript" src="chrome://tweetlol/content/services.js"/>
+    <script type="application/x-javascript" src="chrome://tweetlol/content/newaccount.js"/>
+
+    <wizardpage onpageshow="populateServiceMenu();">
+        <label value="&tweetlol.newAccountWizard.servicePage.service;"
+               control="serviceSelector"
+               accesskey="&tweetlol.newAccountWizard.servicePage.service.accesskey;"/>
+        <menulist id="serviceSelector">
+            <menupopup>
+            </menupopup>
+        </menulist>
+    </wizardpage>
+    
+    <wizardpage onpageshow="selectService()">
+        <iframe id="serviceFrame"/>
+    </wizardpage>
+
+    <wizardpage onpageshow="configure()">
+        <label value="Your account is now configured! \o/"/>
+        <hbox>
+            <label value="Account name:"/>
+            <label id="accountName" style="font-weight: bold"/>
+        </hbox>
+    </wizardpage>
+</wizard>

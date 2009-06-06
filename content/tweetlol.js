@@ -1,3 +1,11 @@
+var mainWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIWebNavigation)
+                   .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+                   .rootTreeItem
+                   .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIDOMWindow); 
+var server = mainWindow.Tweetlol.server;
+
 var lastTweet = { "friends": 0, "replies": 0 };
 var lastUpdate = { "friends": 0, "replies": 0 };
 var tweetTimer = null;
@@ -7,9 +15,6 @@ var activeTab = "friends";
 
 var observer = Components.classes["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
-
-var nativeJSON = Components.classes["@mozilla.org/dom/json;1"]
-                    .createInstance(Components.interfaces.nsIJSON);
 
 var urlRe = /https?:\/\/[^ ):]+/;
 var urliseRe = /(https?:\/\/[^ ):]+|@[a-zA-Z0-9_]+|#(?:\w|[0-9&#;_'æøåÆØÅ])+|spotify:[a-zA-Z0-9:]+)/;

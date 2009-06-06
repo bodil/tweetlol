@@ -45,3 +45,10 @@ function applyPrefsDialog() {
     var bPassword = document.getElementById("bPassword");
     setLogin(bUsername.value, bPassword.value);
 }
+
+function addService() {
+    Tweetlol.log("wizard begin");
+    var wizard = window.openDialog('chrome://tweetlol/content/newaccount.xul',
+                      'New Account Wizard', 'centerscreen,modal');
+    Tweetlol.log("wizard end: " + wizard.configuredService);
+}

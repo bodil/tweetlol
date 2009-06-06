@@ -4,6 +4,9 @@
 <overlay id="tweetlolSidebarOverlay"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+    <script type="application/x-javascript" src="chrome://tweetlol/content/util.js"/>
+    <script type="application/x-javascript" src="chrome://tweetlol/content/server.js"/>
+
     <menupopup id="viewSidebarMenu">
         <menuitem key="key_openTweetlolSidebar" observes="viewTweetlolSidebar"  />
     </menupopup>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type"text/css" ?>
+<?xml-stylesheet href="chrome://browser/skin/browser.css" type="text/css" ?>
+<?xml-stylesheet href="chrome://tweetlol/skin/tweetlol.css" type="text/css"?>
+
+<!DOCTYPE page SYSTEM "chrome://tweetlol/locale/tweetlol.dtd">
+
+<page id="twitterEditor"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script type="application/x-javascript" src="chrome://tweetlol/content/util.js"/>
+    <script type="application/x-javascript" src="chrome://tweetlol/content/services.js"/>
+    <script type="application/x-javascript" src="chrome://tweetlol/content/services/twitter.js"/>
+
+    <grid>
+        <columns>
+            <column flex="1"/>
+            <column flex="2"/>
+        </columns>
+        <rows>
+            <row align="center">
+                <label value="&tweetlol.service.username;" control="bUsername" accesskey="&tweetlol.service.username.accesskey;"/>
+                <textbox id="bUsername" preference="username" oninput="invalidate();"/>
+            </row>
+            <row align="center">
+                <label value="&tweetlol.service.password;" control="bPassword" accesskey="&tweetlol.service.password.accesskey;"/>
+                <textbox id="bPassword" type="password" oninput="invalidate();"/>
+            </row>
+        </rows>
+    </grid>
+
+    <hbox id="verifyButtonGroup">
+        <spacer flex="1"/>
+        <button id="verifyButton" label="Verify account" onclick="verifyAccount();"/>
+        <spacer flex="1"/>
+    </hbox>
+
+    <hbox id="verifyingGroup" hidden="true">
+        <spacer flex="1"/>
+        <label value="Verifying..."/>
+        <spacer flex="1"/>
+    </hbox>
+
+    <hbox id="verifiedGroup" hidden="true">
+        <spacer flex="1"/>
+        <label value="Account is valid!"/>
+        <spacer flex="1"/>
+    </hbox>
+
+</page>
