@@ -21,6 +21,7 @@
         </em:targetApplication>
 
         <em:iconURL>chrome://tweetlol/content/icons/tweetlol.png</em:iconURL>
+        <em:optionsURL>chrome://tweetlol/content/prefs.xul</em:optionsURL>
         <em:homepageURL>http://www.tweetlol.net/</em:homepageURL>
     </Description>
 </RDF>
