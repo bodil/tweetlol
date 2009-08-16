@@ -249,18 +249,26 @@ function tweetToDOM(tweet, disableControls) {
     var header = $('<p class="postinfo"/>');
     header.append(url(userUrl(tweet.user.screen_name), tweet.user.name));
     var extra = $('<p class="like"/>');
-    if (tweet.in_reply_to_status_id) {
-        extra.append('in reply to ');
-        extra.append(url(noticeUrl(tweet.in_reply_to_screen_name,
-                           tweet.in_reply_to_status_id), tweet.in_reply_to_screen_name));
+    if (tweet.retweet_details) {
+        extra.append('retweeted by ');
+        extra.append(url(userUrl(tweet.retweet_details.retweeting_user.screen_name),
+                            tweet.retweet_details.retweeting_user.name));
+        var time = Date.parse(tweet.retweet_details.retweeted_at);
+        extra.append(' <span class="time" time="' + time + '"></span> ago');
+    } else {
+        if (tweet.in_reply_to_status_id) {
+            extra.append('in reply to ');
+            extra.append(url(noticeUrl(tweet.in_reply_to_screen_name,
+                               tweet.in_reply_to_status_id), tweet.in_reply_to_screen_name));
+        }
+        extra.append(" via ");
+        if (tweet.source.charAt(0) == "<")
+            extra.append(fixUrl($(tweet.source)));
+        else
+            extra.append(tweet.source);
+        var time = Date.parse(tweet.created_at);
+        extra.append(' <span class="time" time="' + time + '"></span> ago');
     }
-    extra.append(" via ");
-    if (tweet.source.charAt(0) == "<")
-        extra.append(fixUrl($(tweet.source)));
-    else
-        extra.append(tweet.source);
-    var time = Date.parse(tweet.created_at);
-    extra.append(' <span class="time" time="' + time + '"></span> ago');
     entry.append(header);
     var post = fixUrl($('<p class="post"/>').html(urlise(tweet.text)));
     if (!disableControls && Tweetlol.prefs.getBoolPref("resolveLinks")) resolveUrls(post);
@@ -386,7 +394,7 @@ function refreshTweets() {
     var url = apiUrl();
     switch (tab) {
         case "friends":
-            url += "statuses/friends_timeline";
+            url += "statuses/home_timeline";
             break;
         case "replies":
             url += "statuses/replies";
