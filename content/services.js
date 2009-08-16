@@ -43,7 +43,7 @@ Tweetlol.extend(Tweetlol.Service.Twitter, {
                 var response = nativeJSON.decode(req.responseText);
                 callback(false, response.error);
             }
-        }, "http://twitter.com/account/verify_credentials.json", {
+        }, "https://twitter.com/account/verify_credentials.json", {
             username: username,
             password: password,
             host: "http://twitter.com",
@@ -73,7 +73,7 @@ Tweetlol.extend(Tweetlol.Service.Identica, {
                 var response = nativeJSON.decode(req.responseText);
                 callback(false, response.error);
             }
-        }, "http://identi.ca/api/account/verify_credentials.json", {
+        }, "https://identi.ca/api/account/verify_credentials.json", {
             username: username,
             password: password
         }, true);
