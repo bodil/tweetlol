@@ -206,3 +206,9 @@ ul.actions li {
     background-color: #666;
     cursor: pointer;
 }
+
+div.entry p.retweet {
+    margin: 0 0 0.2em 0;
+    padding: 0 0 0.2em 0;
+    border-bottom: 1px solid #448;
+}

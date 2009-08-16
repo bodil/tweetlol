@@ -308,11 +308,15 @@ function actionDM(tweet, item, event) {
 }
 
 function actionRetweet(tweet, item, event) {
-    var box = $("#tweetbox");
-    box.val("RT @" + tweet.user.screen_name + ": " + tweet.text);
-    box.focus();
-    replyingTo = null;
-    updateInputCount();
+    var retweet = item.find("p.retweet");
+    if (retweet.size()) {
+        retweet.remove();
+        return;
+    }
+    retweet = $('<p class="retweet">Retweet? <a class="yes">Yes</a> / <a class="no">No</a></p>');
+    retweet.find("a.yes").click(function(event) { retweet.remove(); postRetweet(tweet.id); });
+    retweet.find("a.no").click(function(event) { retweet.remove(); });
+    item.find("p.like").prepend(retweet);
 }
 
 function actionFavourite(tweet, item, fave, event) {
@@ -448,4 +452,26 @@ function postUpdate(tweet, reply) {
             }
         });
     }, tweet, urlRe, function(match, callback) { shortenUrl(match[0], callback); });
+}
+
+function postRetweet(id) {
+    var username = Tweetlol.prefs.getCharPref("username");
+    if (!username) return;
+    var login = getLogin(Tweetlol.prefs.getCharPref("username"));
+    if (!login) return;
+
+    $.ajax({
+        url: apiUrl("statuses/retweet/" + id + ".json"),
+        type: "PUT",
+        username: login.username,
+        password: login.password,
+        error: function(request, error, trace) {
+            Tweetlol.log(error);
+            Tweetlol.log(trace);
+        },
+        success: function(data) {
+            if (activeTab == "friends")
+                refreshTweets();
+        }
+    });
 }
